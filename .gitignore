@@ -1,3 +1,5 @@
 .idea/**
 *.pyc
 .ipynb_checkpoints/**
+MNIST_data/**
+logs/**
