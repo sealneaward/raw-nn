@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from pprint import pprint
 
 np.random.seed(0123)
@@ -17,7 +18,7 @@ def sigmoid(x):
 
 # rectified linear unit activation function
 def relu(x):
-    return 1. * (x > 0)
+    np.maximum(0,x)
 
 # get derivative of matrix
 def derivative(x):
@@ -51,7 +52,9 @@ w1 = np.random.random((4,1))
 
 ##########################################
 # Train network by updating weights
-##########################################+
+##########################################
+plot_x = []
+plot_y = []
 
 for i in range(0,100000):
 
@@ -62,13 +65,15 @@ for i in range(0,100000):
 
     # approximate loss on l2
     l2_loss = Y - l2
+    plot_x.append(i)
+    plot_y.append(np.mean(np.abs(l2_loss)))
 
     # get derivative of loss on third hidden layer with respect to second hidden layer
     d_l2 = l2_loss * derivative(l2)
 
     # get loss approximation of first hidden layer with respect to derivative
     # of l2 loss transposed with the weights of second hidden layer
-    l1_loss = d_l2.dot(w1.T)
+    l1_loss = np.dot(d_l2,w1.T)
 
     # get derivative of loss on second hidden layer with respect to first hidden layer
     d_l1 = l1_loss * derivative(l1)
@@ -78,5 +83,8 @@ for i in range(0,100000):
         print 'Loss: ' + str(np.mean(np.abs(l2_loss)))
 
     # update weights of first two
-    w1 += l1.T.dot(d_l2)
-    w0 += l0.T.dot(d_l1)
+    w1 += np.dot(l1.T,d_l2)
+    w0 += np.dot(l0.T,d_l1)
+
+plt.plot(plot_x,plot_y)
+plt.show()
